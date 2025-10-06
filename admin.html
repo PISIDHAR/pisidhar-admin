@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Buddies - Admin Panel</title>
+<style>
+body { font-family: system-ui; background:#f4f6fb; margin:0; padding:0; }
+header { background:#2563eb; color:white; text-align:center; padding:15px; font-size:24px; font-weight:bold; }
+.container { max-width:700px; margin:auto; padding:20px; }
+input, select, button { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+button { background:#2563eb; color:white; border:none; cursor:pointer; }
+button:hover { background:#1d4ed8; }
+h2 { text-align:center; margin-bottom:20px; }
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBBqjtuJ50YrJQ7Mrf6M_MnwSdO96ici-k",
+  authDomain: "study-buddies-exam.firebaseapp.com",
+  projectId: "study-buddies-exam",
+  storageBucket: "study-buddies-exam.firebasestorage.app",
+  messagingSenderId: "1017595202024",
+  appId: "1:1017595202024:web:67568199ddfe235bca3c5d",
+  measurementId: "G-J2YJ12TB7Z"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.addQuestion = async () => {
+  const password = document.getElementById('adminPass').value.trim();
+  if(password !== "DARSHILISBEST") { alert("Wrong Password!"); return; }
+
+  const q = document.getElementById('newQ').value.trim();
+  const opt1 = document.getElementById('opt1').value.trim();
+  const opt2 = document.getElementById('opt2').value.trim();
+  const opt3 = document.getElementById('opt3').value.trim();
+  const opt4 = document.getElementById('opt4').value.trim();
+  const correctIndex = Number(document.getElementById('correctIndex').value);
+  const sec = document.getElementById('newSection').value;
+
+  if(!q || !opt1 || !opt2 || !opt3 || !opt4 || isNaN(correctIndex) || !sec) {
+    alert("⚠️ Fill all fields correctly!");
+    return;
+  }
+
+  try {
+    const id = "q" + Date.now();
+    await setDoc(doc(db,"questions",id),{
+      question: q,
+      options: [opt1,opt2,opt3,opt4],
+      correct: correctIndex,
+      section: sec
+    });
+    alert("✅ Question Added Successfully!");
+    document.getElementById('newQ').value="";
+    document.getElementById('opt1').value="";
+    document.getElementById('opt2').value="";
+    document.getElementById('opt3').value="";
+    document.getElementById('opt4').value="";
+    document.getElementById('correctIndex').value="";
+    document.getElementById('newSection').value="";
+  } catch(e) {
+    console.error(e);
+    alert("❌ Error: "+e.message);
+  }
+};
+</script>
+</head>
+<body>
+<header>✏️ Study Buddies Admin Panel</header>
+<div class="container">
+  <h2>Add New Question</h2>
+  <input type="password" id="adminPass" placeholder="Enter Admin Password">
+  <input type="text" id="newQ" placeholder="Enter Question">
+  <input type="text" id="opt1" placeholder="Option 1">
+  <input type="text" id="opt2" placeholder="Option 2">
+  <input type="text" id="opt3" placeholder="Option 3">
+  <input type="text" id="opt4" placeholder="Option 4">
+  <input type="number" id="correctIndex" min="0" max="3" placeholder="Correct Option Index (0-3)">
+  <select id="newSection">
+    <option value="">Select Section</option>
+    <option value="5-7">Section 5-7</option>
+    <option value="8-10">Section 8-10</option>
+  </select>
+  <button onclick="addQuestion()">➕ Add Question</button>
+</div>
+</body>
+</html>
+
+

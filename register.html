@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us - Health Help</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f7f9fb;
+      color: #333;
+    }
+
+    .contact-section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .contact-section h2 {
+      text-align: center;
+      font-size: 36px;
+      color: #0c3c78;
+    }
+
+    .contact-section p {
+      text-align: center;
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-between;
+    }
+
+    .contact-form, .contact-info {
+      flex: 1 1 400px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-form label {
+      font-weight: 600;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      font-size: 16px;
+    }
+
+    .contact-form button {
+      background: #0c3c78;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .contact-form button:hover {
+      background: #0b3266;
+    }
+
+    .contact-info {
+      text-align: center;
+    }
+
+    .contact-info img {
+      max-width: 200px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .contact-info h3 {
+      margin: 10px 0;
+      font-size: 22px;
+      color: #0c3c78;
+    }
+
+    .contact-info p {
+      font-size: 16px;
+      color: #444;
+    }
+
+    #status {
+      color: green;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .contact-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="contact-section">
+    <h2>REGISTER</h2>
+    <p>FILL ALL DETAIL.IN MESSAGE SECTION WRITE YOUR CLASS.
+
+FOR CONTACT MAIL US.</p>
+    
+    <div class="contact-container">
+      <form class="contact-form" id="contactForm">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" required placeholder="Enter your name" />
+
+        <label for="email">Your Email</label>
+        <input type="email" id="email" required placeholder="Enter your email" />
+
+        <label for="message">Your Message</label>
+        <textarea id="message" rows="5" required placeholder="Type your message here..."></textarea>
+
+        <button type="submit">Send Message</button>
+        <p id="status"></p>
+      </form>
+
+      <div class="contact-info">
+        <img src="doctor.png" alt="TEAM" />
+        <h3>PISIDHAR</h3>
+        <p><strong>Email:</strong> triopreneurs729@gmail.com</p>
+        <p><strong>WhatsApp:</strong> N.A.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIREBASE + EMAILJS script (keep same as before) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEkjFj4LKGp2ZZYTXtdONzFBiigSF1CU0",
+      authDomain: "healthhelp-contact.firebaseapp.com",
+      projectId: "healthhelp-contact",
+      storageBucket: "healthhelp-contact.firebasestorage.app",
+      messagingSenderId: "374970048698",
+      appId: "1:374970048698:web:bec80b50dede384e686283"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("contactForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
+
+      try {
+        await addDoc(collection(db, "contactMessages"), {
+          name,
+          email,
+          message,
+          timestamp: new Date().toISOString()
+        });
+
+        // OPTIONAL: Add EmailJS send() here if you’ve set it up
+        status.textContent = "✅ Message sent successfully!";
+        form.reset();
+      } catch (error) {
+        console.error("Error sending:", error);
+        status.textContent = "❌ Failed to send message.";
+      }
+    });
+  </script>
+
+</body>
+</html>

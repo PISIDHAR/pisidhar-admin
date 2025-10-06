@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>STUDY BUDDIES</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form onsubmit="return checkLogin(event)">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        <p>Don't have an account? <a href="contact.html">Register here</a></p>
+    </div>
+
+    <script>
+        function checkLogin(event) {
+            event.preventDefault(); // Form submit रोक दो
+
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+
+            // ✅ Fixed username और password check
+            if (user === "PISIDHARISBEST" && pass === "PIHUSIDDHUDARSH") {
+                window.location.href = "admin.html"; // सही है तो login
+            } else {
+                alert("❌ Wrong username or password!");
+            }
+        }
+    </script>
+</body>
+</html>
+
+
